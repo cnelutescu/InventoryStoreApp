@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.example.android.inventorystoreapp.data.StockContract;
 import com.squareup.picasso.Picasso;
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 
@@ -326,6 +327,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
         String priceString = mPriceEditText.getText().toString().trim();
 
+
         String quantityString = mQuantityEditText.getText().toString().trim();
         String orderedQuantityString = mOrderedQuantityEditText.getText().toString().trim();
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
@@ -391,6 +393,7 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         ContentValues values = new ContentValues();
         values.put(StockContract.StockEntry.COLUMN_STOCK_NAME, nameString);
 
+//---------------------------------------------------------------------------------------------
 //        int i = priceString.indexOf('.');
 //        if (i>=0) {
 //        }
@@ -402,9 +405,19 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //long lngPrice = Integer.parseInt(priceString);
 
-        values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, priceString);
+        double dblPrice = Double.parseDouble(priceString);
+        // dblPrice = dblPrice*100;
+        //long lngPrice = (long)dblPrice;
+        // long lngPrice = Long.parseLong(priceString);
+
+        //BigDecimal bd = new BigDecimal(priceString);
+        //int packedInt = bd.scaleByPowerOfTen(2).intValue();
 
 
+        //values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, priceString);
+        // values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, lngPrice);
+        values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, dblPrice);
+//-------------------------------------------------------------------------------------------------
         values.put(StockContract.StockEntry.COLUMN_STOCK_QUANTITY, quantityString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_ORDERED, orderedQuantityString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_NAME, supplierNameString);
@@ -659,12 +672,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
 
-            // double price = cursor.getDouble(priceColumnIndex);
-            // int price = cursor.getInt(priceColumnIndex);
-            String strPrice = cursor.getString(priceColumnIndex);
-            //String strPrice = Integer.toString(price);
-            //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
-
             int quantity = cursor.getInt(quantityColumnIndex);
             int ordered = cursor.getInt(orderedColumnIndex);
             String supplier = cursor.getString(supplierColumnIndex);
@@ -674,11 +681,29 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
+//------------------------------------------------------------------------------------------
+            // double price = cursor.getDouble(priceColumnIndex);
+            // int price = cursor.getInt(priceColumnIndex);
+
+            //String strPrice = cursor.getString(priceColumnIndex);
+            //String strPrice = Integer.toString(price);
+            //long lngPrice = cursor.getInt(priceColumnIndex);
+            //long lngPrice = Long.parseLong(strPrice);
+            //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
+            double dblPrice = cursor.getDouble(priceColumnIndex);
+            String strPrice = String.valueOf(dblPrice);
+
+
+            //BigDecimal bd = new BigDecimal(strPrice);
+            //int packedInt = bd.scaleByPowerOfTen(2).intValue();
+
+
+            //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
 
 /*
             mPriceEditText.setText(Double.toString(price));
             Double db = (Double.valueOf(price));
-//*--
+
             //NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
             //String stockPrice  = numberFormat.format(price);
             NumberFormat numberFormat = NumberFormat.getNumberInstance();
@@ -688,6 +713,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
 */
             //mPriceEditText.setText(Integer.toString(price));
             mPriceEditText.setText(strPrice);
+            //mPriceEditText.setText(Long.toString(lngPrice));
+//---------------------------------------------------------------------------------------------
 
             mQuantityEditText.setText(Integer.toString(quantity));
             mOrderedQuantityEditText.setText(Integer.toString(ordered));

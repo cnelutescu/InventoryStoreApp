@@ -63,10 +63,12 @@ public class StockDbHelper extends SQLiteOpenHelper {
 
         //???????????
                 // + StockEntry.COLUMN_STOCK_PRICE + " REAL NOT NULL, "
+                 + StockEntry.COLUMN_STOCK_PRICE + " DOUBLE NOT NULL, "
+                // + StockEntry.COLUMN_STOCK_PRICE + " DECIMAL(7,2) NOT NULL, "
+                // + StockEntry.COLUMN_STOCK_PRICE + " NUMERIC NOT NULL, "
+
                 // + StockEntry.COLUMN_STOCK_PRICE + " INTEGER NOT NULL DEFAULT '0', "
                 // + StockEntry.COLUMN_STOCK_PRICE + " TEXT NOT NULL, "
-                // + StockEntry.COLUMN_STOCK_PRICE + " DECIMAL(10,2) NOT NULL, "
-                + StockEntry.COLUMN_STOCK_PRICE + " NUMERIC NOT NULL, "
 
                 + StockEntry.COLUMN_STOCK_QUANTITY + " INTEGER NOT NULL DEFAULT '0', "
                 + StockEntry.COLUMN_STOCK_ORDERED + " INTEGER NOT NULL DEFAULT '0', "

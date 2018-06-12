@@ -86,13 +86,16 @@ public class StockCursorAdapter extends CursorAdapter {
 
         String stockName = cursor.getString(nameColumnIndex);
 
-        String strPrice = cursor.getString(priceColumnIndex);
-        //int stockPrice = cursor.getInt(priceColumnIndex);
+//----------------------------------------------------------------------------------------
+        //String strPrice = cursor.getString(priceColumnIndex);
+        //long lngPrice = cursor.getLong(priceColumnIndex);
         //String strPrice = Integer.toString(stockPrice);
         //double dblPrice = Double.parseDouble(strPrice);
         //dblPrice = dblPrice / 100.0;
+        double dblPrice = cursor.getDouble(priceColumnIndex);
+        String strPrice = String.valueOf(dblPrice);
         //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
-
+//------------------------------------------------------------------------------------------
 
         String stockQuantity = cursor.getString(quantityColumnIndex);
         String stockOrdered = cursor.getString(orderedColumnIndex);
@@ -131,7 +134,7 @@ public class StockCursorAdapter extends CursorAdapter {
 
         // priceTextView.setText(Integer.toString(stockPrice));
         priceTextView.setText(strPrice);
-
+        // priceTextView.setText(Long.toString(lngPrice));
 
         quantityTextView.setText(stockQuantity);
         orderedTextView.setText(stockOrdered);

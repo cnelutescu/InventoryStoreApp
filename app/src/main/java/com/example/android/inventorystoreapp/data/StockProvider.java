@@ -204,9 +204,10 @@ public class StockProvider extends ContentProvider {
         }
 
         // If the price is provided, check that it's greater than or equal to 0
-        // Double price = values.getAsDouble(StockContract.StockEntry.COLUMN_STOCK_PRICE);
-        Integer price = values.getAsInteger(StockContract.StockEntry.COLUMN_STOCK_PRICE);
-        if (price != null && price < 0) {
+        double price = values.getAsDouble(StockContract.StockEntry.COLUMN_STOCK_PRICE);
+        // long price = values.getAsInteger(StockContract.StockEntry.COLUMN_STOCK_PRICE);
+        // if (price != null && price < 0) {
+        if (price < 0) {
             throw new IllegalArgumentException("Product requires valid price");
         }
 
@@ -295,11 +296,12 @@ public class StockProvider extends ContentProvider {
 
         // If the price is provided, check that it's greater than or equal to 0
         if (values.containsKey(StockContract.StockEntry.COLUMN_STOCK_PRICE)) {
-            //Double price = values.getAsDouble(StockContract.StockEntry.COLUMN_STOCK_PRICE);
-            //Integer price = values.getAsInteger(StockContract.StockEntry.COLUMN_STOCK_PRICE);
-            String price = values.getAsString(StockContract.StockEntry.COLUMN_STOCK_PRICE);
+            double price = values.getAsDouble(StockContract.StockEntry.COLUMN_STOCK_PRICE);
+            // long price = values.getAsInteger(StockContract.StockEntry.COLUMN_STOCK_PRICE);
+            //String price = values.getAsString(StockContract.StockEntry.COLUMN_STOCK_PRICE);
             // if (price != null && price < 0) {
-            if (price == null) {
+            //if (price == null) {
+            if (price < 0) {
                 throw new IllegalArgumentException("Product requires valid price");
             }
         }

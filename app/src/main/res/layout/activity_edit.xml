@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:hint="Price"
             android:inputType="numberDecimal"
-            android:maxLength="7"
+            android:maxLength="11"
             android:selectAllOnFocus="true" />
 
         <TextView

@@ -87,7 +87,7 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
         // and demo product attributes are the values.
         ContentValues values = new ContentValues();
         values.put(StockEntry.COLUMN_STOCK_NAME, "Demo product");
-        values.put(StockEntry.COLUMN_STOCK_PRICE, 12345);
+        values.put(StockEntry.COLUMN_STOCK_PRICE, "1234567.99");
         values.put(StockEntry.COLUMN_STOCK_QUANTITY, 10);
         values.put(StockEntry.COLUMN_STOCK_ORDERED, 5);
         values.put(StockEntry.COLUMN_STOCK_SUPPLIER_NAME, "Supplier 1");
