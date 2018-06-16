@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Layout for the list of inventory products -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout for the list of inventory products -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,47 +8,208 @@
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-    <!-- Empty view for the list -->
-    <RelativeLayout
+    <ScrollView
         android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/edit_margin">
 
-        <ImageView
-            android:id="@+id/empty_shelter_image"
+        <!-- Empty view for the list -->
+        <RelativeLayout
+
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/supplier" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/empty_title_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/empty_shelter_image"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-medium"
-            android:paddingTop="16dp"
-            android:text="No products in stock..."
-            android:textAppearance="?android:textAppearanceMedium"/>
+            <ImageView
+                android:id="@+id/empty_stock_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/empty_stock_image"
+                android:scaleType="fitXY"
+                android:src="@drawable/supplier" />
 
-        <TextView
-            android:id="@+id/empty_subtitle_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/empty_title_text"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif"
-            android:paddingTop="8dp"
-            android:text="Add products in inventory stock"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#A2AAB0"/>
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/empty_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/empty_stock_image"
+                android:layout_centerHorizontal="true"
+                android:padding="@dimen/empty_text_padding"
+                android:text="@string/no_products_in_stock"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold" />
 
+            <LinearLayout
+                android:id="@+id/empty_add_products"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_half_height"
+                android:layout_below="@+id/empty_title_text"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/list_text_padding">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/quantity_circle"
+                    android:contentDescription="@string/empty_stock_image"
+                    android:padding="@dimen/list_text_padding"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_add_shopping_cart2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/list_margin_help"
+                    android:layout_marginStart="@dimen/list_margin_help"
+                    android:text="@string/add_products_in_inventory_stock"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/textColorLight" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_filter_products"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_half_height"
+                android:layout_below="@+id/empty_add_products"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/list_text_padding">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/quantity_circle"
+                    android:contentDescription="@string/empty_stock_image"
+                    android:padding="@dimen/list_text_padding"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_filter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/list_margin_help"
+                    android:layout_marginStart="@dimen/list_margin_help"
+                    android:text="@string/filter_the_list_of_inventory_products"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/textColorLight" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_sell_one_product"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_half_height"
+                android:layout_below="@+id/empty_filter_products"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/list_text_padding">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/empty_stock_image"
+                    android:padding="@dimen/list_text_padding"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_add_shopping_cart_blue_minus" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/list_margin_help"
+                    android:layout_marginStart="@dimen/list_margin_help"
+                    android:text="@string/decrease_product_in_stock_by_one_item"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/textColorLight" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_save_product"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_half_height"
+                android:layout_below="@+id/empty_sell_one_product"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/list_text_padding">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/quantity_circle"
+                    android:contentDescription="@string/empty_stock_image"
+                    android:padding="@dimen/list_text_padding"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_action_save" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/list_margin_help"
+                    android:layout_marginStart="@dimen/list_margin_help"
+                    android:text="@string/save_product_in_inventory_stock"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/textColorLight" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/empty_delete_product"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/list_half_height"
+                android:layout_below="@+id/empty_save_product"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/list_text_padding">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/quantity_circle"
+                    android:contentDescription="@string/empty_stock_image"
+                    android:padding="@dimen/list_text_padding"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_delete_forever2" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/list_margin_help"
+                    android:layout_marginStart="@dimen/list_margin_help"
+                    android:text="@string/delete_product_from_inventory_stock"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@color/textColorLight" />
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/empty_return_button"
+                android:layout_width="@dimen/rotate_button_dim"
+                android:layout_height="@dimen/rotate_button_dim"
+                android:layout_below="@+id/empty_delete_product"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/empty_text_padding"
+                android:contentDescription="@string/rotate_photo"
+                android:src="@drawable/ic_check" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
 

@@ -11,30 +11,45 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
 
+
 /**
  * Displays list of inventory store products that were entered and stored in the app
  */
- public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-// public class MainActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+@SuppressWarnings("ALL")
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the stock products data loader; arbitrarily chosen = 0*/
+    /**
+     * Identifier for the stock products data loader; arbitrarily chosen = 0
+     */
     private static final int STOCK_LOADER = 0;
 
-    /** Adapter for our ListView */
+    /**
+     * Adapter for our ListView
+     */
     StockCursorAdapter mCursorAdapter;
+
+    /**
+     * ImageButton for return from Help
+     */
+    private ImageButton mImageButtonReturn;
+
+    /**
+     * TextView field for empty view title
+     */
+    private TextView mEmpty_title_text;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +57,18 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
         setContentView(R.layout.activity_main);
 
         // Find the ListView which will be populated with the stock products inventory data
-        ListView stockListView = (ListView) findViewById(R.id.list);
+        ListView stockListView = findViewById(R.id.list);
+
+        // Verify if Help was clicked and display accordingly
+        mEmpty_title_text = findViewById(R.id.empty_title_text);
+        mImageButtonReturn = findViewById(R.id.empty_return_button);
+        if (MyGlobal.displayHelp) {
+            mEmpty_title_text.setVisibility(View.GONE);
+            mImageButtonReturn.setVisibility(View.VISIBLE);
+        } else {
+            mEmpty_title_text.setVisibility(View.VISIBLE);
+            mImageButtonReturn.setVisibility(View.GONE);
+        }
 
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items.
         View emptyView = findViewById(R.id.empty_view);
@@ -69,14 +95,26 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
 
                 // Set the URI on the data field of the intent
                 intent.setData(currentProductUri);
-                    // Launch the {@link EditActivity} to display the data for the current product.
+                // Launch the {@link EditActivity} to display the data for the current product.
                 startActivity(intent);
             }
         });
+
+        // Lister to exit help view when user clicks the button
+        mImageButtonReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyGlobal.displayHelp = false;
+                // restart MainActivity
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+
         // Initialize the loader (Kick off the loader)
         getLoaderManager().initLoader(STOCK_LOADER, null, this);
     }
-
 
     /**
      * Helper method to insert hardcoded demo product data into the database.
@@ -93,17 +131,14 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
         values.put(StockEntry.COLUMN_STOCK_SUPPLIER_NAME, "Supplier 1");
         values.put(StockEntry.COLUMN_STOCK_SUPPLIER_PHONE, "0740000000");
         values.put(StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL, "supplier1@gmail.com");
+        values.put(StockEntry.COLUMN_STOCK_ROTATION_NUMBER, 0);
 
         // Insert a new row with a demo product into the provider using the ContentResolver.
         // Use the {@link StockEntry#CONTENT_URI} to indicate that we want to insert
         // into the stock database table.
         // Receive the new content URI that will allow us to access that new data in the future.
         Uri newUri = getContentResolver().insert(StockEntry.CONTENT_URI, values);
-
-        Log.v("Inventory-Main", "New row inserted: Uri=" + newUri);
-        Toast.makeText(this, "New row inserted: Uri=" + newUri, Toast.LENGTH_SHORT).show();
     }
-
 
     /**
      * This adds menu items to the app bar
@@ -114,7 +149,6 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
 
     /**
      * This process menu items option clicks in the app bar overflow menu
@@ -133,6 +167,15 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
                 // Pop up confirmation dialog for deletion
                 showDeleteConfirmationDialog();
                 return true;
+            // Respond to a click on the "Help" menu option
+            case R.id.action_help:
+                // Display empty_view for help info
+                // mDisplayHelp = true;
+                MyGlobal.displayHelp = true;
+                // Restart MainActivity
+                finish();
+                startActivity(getIntent());
+                return true;
             // Respond to a click on the "Add product" menu option
             case R.id.action_insert_product_data:
                 // Start Edit activity
@@ -142,13 +185,10 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
             // Respond to a click on the "Filter product data" menu option
             case R.id.action_filter_data:
                 // Filter product data in Main activity
-                Log.v("Inventory-Main", "Pressed Menu Item: Filter product.");
-                Toast.makeText(this, "Pressed Menu Item: Filter product.", Toast.LENGTH_LONG).show();
-                onSearchRequested();		// called on Filter btn click	and open Search dialog
+                onSearchRequested();        // called on Filter btn click	and open Search dialog
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     // will create a dialog that calls deleteAllData when the delete button is pressed.
     private void showDeleteConfirmationDialog() {
@@ -176,43 +216,47 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
         alertDialog.show();
     }
 
-
     /**
      * Method to delete stock table(and delete all data in it)
      */
     private void deleteAllData() {
         int rowsDeleted = getContentResolver().delete(StockEntry.CONTENT_URI, null, null);
-        Log.v("Inventory-Main", "Stock table deleted - all data erased, " + rowsDeleted + " rows deleted from stock database");
-        Toast.makeText(this, "Stock table deleted - all data erased, " + rowsDeleted + " rows deleted from stock database", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.stock_table_deleted) + rowsDeleted + " " + getString(R.string.rows_deleted), Toast.LENGTH_LONG).show();
     }
 
-//------------------------------
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
         // Define a projection that specifies the columns from the table we care about.
         String[] projection = {
-            StockEntry._ID,       // ID always needed for the cursor to pass to any cursor adapter
-            StockEntry.COLUMN_STOCK_NAME,
-            StockEntry.COLUMN_STOCK_PRICE,
-            StockEntry.COLUMN_STOCK_QUANTITY,
-            StockEntry.COLUMN_STOCK_ORDERED,
-            StockEntry.COLUMN_STOCK_SUPPLIER_NAME,
-            StockEntry.COLUMN_STOCK_SUPPLIER_PHONE,
-            StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL,
-            StockEntry.COLUMN_STOCK_IMAGE };
+                StockEntry._ID,       // ID always needed for the cursor to pass to any cursor adapter
+                StockEntry.COLUMN_STOCK_NAME,
+                StockEntry.COLUMN_STOCK_PRICE,
+                StockEntry.COLUMN_STOCK_QUANTITY,
+                StockEntry.COLUMN_STOCK_ORDERED,
+                StockEntry.COLUMN_STOCK_SUPPLIER_NAME,
+                StockEntry.COLUMN_STOCK_SUPPLIER_PHONE,
+                StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL,
+                StockEntry.COLUMN_STOCK_IMAGE,
+                StockEntry.COLUMN_STOCK_ROTATION_NUMBER};
+
         // This loader will execute the ContentProvider's query method on a background thread
         return new CursorLoader(this,   // Parent activity context
-            StockEntry.CONTENT_URI,   // Provider content URI to query
-            projection,             // Columns to include in the resulting Cursor
-            null,          // No selection clause
-            null,       // No selection arguments
-            null);         // Default sort order
+                StockEntry.CONTENT_URI,   // Provider content URI to query
+                projection,               // Columns to include in the resulting Cursor
+                null,            // No selection clause
+                null,        // No selection arguments
+                null);          // Default sort order
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // Update {@link StockCursorAdapter} with this new cursor containing updated product data
-        mCursorAdapter.swapCursor(data);
+        if (MyGlobal.displayHelp) {
+            mCursorAdapter.swapCursor(null);        // display empty view - help
+        } else {
+            mCursorAdapter.swapCursor(data);                  // display all items from cursor
+        }
     }
 
     @Override
@@ -220,7 +264,5 @@ import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
         // Callback called when the data needs to be deleted with cursor=null
         mCursorAdapter.swapCursor(null);
     }
-
-
 
 }

@@ -2,10 +2,8 @@ package com.example.android.inventorystoreapp.data;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.sqlite.SQLiteQueryBuilder;
 
 import com.example.android.inventorystoreapp.data.StockContract.StockEntry;
 
@@ -26,7 +24,7 @@ public class StockDbHelper extends SQLiteOpenHelper {
      */
     private static final int DATABASE_VERSION = 1;
 
-
+    // map table fields to Custom Suggestion fields
     private HashMap<String, String> mAliasMap;
 
 
@@ -36,17 +34,15 @@ public class StockDbHelper extends SQLiteOpenHelper {
      * @param context of the app
      */
     public StockDbHelper(Context context) {
-        //------------!!!!!!!!!!!!!!!!!!! -- factory??????????
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
         // This HashMap is used to map table fields to Custom Suggestion fields
         mAliasMap = new HashMap<String, String>();
 
         // Unique id for the each Suggestions ( Mandatory )
-        mAliasMap.put("_ID", StockEntry._ID + " as " + "_id" );
+        mAliasMap.put("_ID", StockEntry._ID + " as " + "_id");
         // Text for Suggestions ( Mandatory )
         mAliasMap.put(SearchManager.SUGGEST_COLUMN_TEXT_1, StockEntry.COLUMN_STOCK_NAME + " as " + SearchManager.SUGGEST_COLUMN_TEXT_1);
-
     }
 
     /**
@@ -60,23 +56,16 @@ public class StockDbHelper extends SQLiteOpenHelper {
                 + " ("
                 + StockEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + StockEntry.COLUMN_STOCK_NAME + " TEXT NOT NULL, "
-
-        //???????????
-                // + StockEntry.COLUMN_STOCK_PRICE + " REAL NOT NULL, "
-                 + StockEntry.COLUMN_STOCK_PRICE + " DOUBLE NOT NULL, "
-                // + StockEntry.COLUMN_STOCK_PRICE + " DECIMAL(7,2) NOT NULL, "
-                // + StockEntry.COLUMN_STOCK_PRICE + " NUMERIC NOT NULL, "
-
-                // + StockEntry.COLUMN_STOCK_PRICE + " INTEGER NOT NULL DEFAULT '0', "
-                // + StockEntry.COLUMN_STOCK_PRICE + " TEXT NOT NULL, "
-
+                + StockEntry.COLUMN_STOCK_PRICE + " DOUBLE NOT NULL, "
                 + StockEntry.COLUMN_STOCK_QUANTITY + " INTEGER NOT NULL DEFAULT '0', "
                 + StockEntry.COLUMN_STOCK_ORDERED + " INTEGER NOT NULL DEFAULT '0', "
                 + StockEntry.COLUMN_STOCK_SUPPLIER_NAME + " TEXT NOT NULL, "
                 + StockEntry.COLUMN_STOCK_SUPPLIER_PHONE + " TEXT NOT NULL, "
                 + StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL + " TEXT NOT NULL, "
-                + StockEntry.COLUMN_STOCK_IMAGE + " TEXT NOT NULL DEFAULT 'NO IMAGE'"
+                + StockEntry.COLUMN_STOCK_IMAGE + " TEXT NOT NULL DEFAULT 'NO IMAGE', "
+                + StockEntry.COLUMN_STOCK_ROTATION_NUMBER + " INTEGER NOT NULL DEFAULT '0'"
                 + ");";
+
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_INVENTORY_TABLE);
     }
@@ -86,7 +75,7 @@ public class StockDbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // The database is still at version 1, so there's nothing to do be done here in stage 1
+        // The database is still at version 1, so there's nothing to do be done here
     }
 
 }

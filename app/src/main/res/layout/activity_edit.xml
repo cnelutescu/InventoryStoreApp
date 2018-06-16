@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Layout for the editor -->
+<?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,54 +8,91 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/edit_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Product name"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/product_name"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name" />
+            android:hint="@string/name"
+            android:inputType="textCapSentences"
+            android:maxLength="40"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/edit_text_size" />
 
-        <ImageView
-            android:id="@+id/product_image"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:gravity="center_horizontal"
-            android:scaleType="fitCenter"
-            android:src="@drawable/image_placeholder" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+
+            <ImageView
+                android:id="@+id/product_image"
+                android:layout_width="@dimen/product_image_dim"
+                android:layout_height="@dimen/product_image_dim"
+                android:contentDescription="@string/product_image"
+                android:gravity="center_horizontal"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image_placeholder" />
+
+            <ImageButton
+                android:id="@+id/rotate_photo"
+                android:layout_width="@dimen/rotate_button_dim"
+                android:layout_height="@dimen/rotate_button_dim"
+                android:layout_marginLeft="@dimen/edit_margin"
+                android:layout_marginStart="@dimen/edit_margin"
+                android:layout_marginTop="@dimen/rotate_button_dim"
+                android:contentDescription="@string/rotate_photo"
+                android:src="@drawable/ic_action_turn_right" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Product price"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/product_price"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/product_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Price"
+            android:hint="@string/price_hint"
             android:inputType="numberDecimal"
-            android:maxLength="11"
-            android:selectAllOnFocus="true" />
+            android:maxLength="14"
+            android:selectAllOnFocus="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/edit_text_size" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Product stock quantity"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/product_stock_quantity"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -69,6 +106,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:contentDescription="@string/decrease_quantity"
                 android:src="@drawable/ic_remove_circle_outline" />
 
             <EditText
@@ -77,15 +115,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:gravity="center"
-                android:hint="Quantity"
+                android:hint="@string/quantity"
                 android:inputType="number"
-                android:maxLength="4" />
+                android:maxLength="4"
+                android:selectAllOnFocus="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/edit_text_size" />
 
             <ImageButton
                 android:id="@+id/increase_quantity"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
+                android:contentDescription="@string/increase_quantity"
                 android:src="@drawable/ic_add_circle_outline" />
 
         </LinearLayout>
@@ -93,10 +136,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Product ordered quantity"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/product_ordered_quantity"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,28 +151,36 @@
 
             <EditText
                 android:id="@+id/product_ordered"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:gravity="center"
-                android:hint="Ordered quantity"
+                android:hint="@string/ordered_quantity_hint"
                 android:inputType="number"
-                android:maxLength="4" />
+                android:maxLength="4"
+                android:selectAllOnFocus="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/edit_text_size" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1.5"
-                android:text="Delivered"
+                android:layout_marginTop="@dimen/edit_margin"
+                android:layout_weight="1"
                 android:gravity="center"
+                android:text="@string/delivered"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/edit_text_size"
                 android:textStyle="bold" />
 
             <ImageButton
-                android:id="@+id/delevered_quantity"
+                android:id="@+id/delivered_quantity"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="4"
+                android:contentDescription="@string/delivered_quantity"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_local_shipping" />
 
@@ -136,22 +189,30 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Supplier name"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/supplier_name"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/supplier_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Supplier"
-            android:inputType="text" />
+            android:hint="@string/supplier"
+            android:inputType="text"
+            android:maxLength="40"
+            android:textSize="@dimen/edit_text_size" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Supplier phone"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/supplier_phone"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -163,26 +224,35 @@
             <EditText
                 android:id="@+id/supplier_phone"
                 android:layout_width="0dp"
-                android:layout_weight="5"
                 android:layout_height="wrap_content"
-                android:hint="Phone"
+                android:layout_weight="4"
+                android:hint="@string/phone"
                 android:inputType="phone"
+                android:maxLength="12"
+                android:selectAllOnFocus="true"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/edit_text_size"
                 tools:phoneNumber="true" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/edit_margin"
+                android:layout_weight="2"
                 android:gravity="center"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1.5"
-                android:text="Order"
+                android:text="@string/order"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="@dimen/edit_text_size"
                 android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/phone_order"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.5"
+                android:layout_weight="2"
+                android:contentDescription="@string/phone_order"
                 android:scaleType="fitXY"
                 android:src="@drawable/supplier2" />
 
@@ -191,17 +261,24 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Supplier email"
+            android:layout_marginTop="@dimen/edit_margin"
+            android:text="@string/supplier_email"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/edit_text_size"
             android:textStyle="bold" />
-
 
         <EditText
             android:id="@+id/supplier_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:maxLength="40"
+            android:selectAllOnFocus="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/edit_text_size" />
 
     </LinearLayout>
 

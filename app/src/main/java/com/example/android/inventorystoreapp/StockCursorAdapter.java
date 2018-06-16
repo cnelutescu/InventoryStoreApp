@@ -18,7 +18,9 @@ import android.widget.Toast;
 import com.example.android.inventorystoreapp.data.StockContract;
 import com.squareup.picasso.Picasso;
 
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 
 /**
@@ -66,15 +68,16 @@ public class StockCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, Cursor cursor) {
         // Find individual views that we want to modify in the list item layout
-        ImageView imageViewProduct = (ImageView) view.findViewById(R.id.product_image);
-        TextView nameTextView = (TextView) view.findViewById(R.id.name);
-        TextView priceTextView = (TextView) view.findViewById(R.id.price);
-        TextView orderedTextView = (TextView) view.findViewById(R.id.ordered);
-        TextView quantityTextView = (TextView) view.findViewById(R.id.quantity);
-        ImageView saleButton = (ImageView) view.findViewById(R.id.sale);
+        ImageView imageViewProduct = view.findViewById(R.id.product_image);
+        TextView nameTextView = view.findViewById(R.id.name);
+        TextView priceTextView = view.findViewById(R.id.price);
+        TextView orderedTextView = view.findViewById(R.id.ordered);
+        TextView quantityTextView = view.findViewById(R.id.quantity);
+        ImageView saleButton = view.findViewById(R.id.sale);
 
         // Find the columns of stock attributes that we're interested in
         int imageColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_IMAGE);
+        int rotationColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_ROTATION_NUMBER);
         int nameColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_NAME);
         int priceColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_PRICE);
         int orderedColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_ORDERED);
@@ -83,19 +86,14 @@ public class StockCursorAdapter extends CursorAdapter {
         // Read the stock attributes from the Cursor for the current product
         int id = cursor.getInt(cursor.getColumnIndex(StockContract.StockEntry._ID));
         Uri productImageUri = Uri.parse(cursor.getString(imageColumnIndex));
+        int rotationNumber = cursor.getInt(rotationColumnIndex);
 
         String stockName = cursor.getString(nameColumnIndex);
 
-//----------------------------------------------------------------------------------------
-        //String strPrice = cursor.getString(priceColumnIndex);
-        //long lngPrice = cursor.getLong(priceColumnIndex);
-        //String strPrice = Integer.toString(stockPrice);
-        //double dblPrice = Double.parseDouble(strPrice);
-        //dblPrice = dblPrice / 100.0;
         double dblPrice = cursor.getDouble(priceColumnIndex);
-        String strPrice = String.valueOf(dblPrice);
-        //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
-//------------------------------------------------------------------------------------------
+        DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        df.setMaximumFractionDigits(340);        // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
+        String strPrice = df.format(dblPrice);
 
         String stockQuantity = cursor.getString(quantityColumnIndex);
         String stockOrdered = cursor.getString(orderedColumnIndex);
@@ -107,19 +105,6 @@ public class StockCursorAdapter extends CursorAdapter {
         if (TextUtils.isEmpty(stockName)) {
             stockName = context.getString(R.string.not_available);
         }
-/*
-        if (TextUtils.isEmpty(stockPrice)) {
-            stockPrice = "0";
-        }
-*/
-
-/*-----@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-        // double dbl = Double.parseDouble(stockPrice);
-        double dbl = cursor.getDouble(priceColumnIndex);
-        stockPrice = numberFormat.format(dbl);
-*/
-
         if (TextUtils.isEmpty(stockQuantity)) {
             stockQuantity = "0";
         }
@@ -131,11 +116,7 @@ public class StockCursorAdapter extends CursorAdapter {
 
         // Update the TextViews with the attributes for the current product
         nameTextView.setText(stockName);
-
-        // priceTextView.setText(Integer.toString(stockPrice));
         priceTextView.setText(strPrice);
-        // priceTextView.setText(Long.toString(lngPrice));
-
         quantityTextView.setText(stockQuantity);
         orderedTextView.setText(stockOrdered);
 
@@ -144,6 +125,9 @@ public class StockCursorAdapter extends CursorAdapter {
                 .placeholder(R.drawable.image_placeholder)
                 .fit()
                 .into(imageViewProduct);
+
+        int angle = rotationNumber * EditActivity.IMAGE_ANGLE;
+        imageViewProduct.setRotation(angle);
 
         // Listener for sale button
         saleButton.setOnClickListener(new View.OnClickListener() {
@@ -162,9 +146,10 @@ public class StockCursorAdapter extends CursorAdapter {
                             null
                     );
                     context.getContentResolver().notifyChange(currentProductUri, null);
+                    Toast.makeText(context, R.string.stock_product_reduced_by_one, Toast.LENGTH_SHORT).show();
                 } else {
                     // Product not in stock!
-                    Toast.makeText(context, "Product not in stock. Need to order!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.product_not_in_stock, Toast.LENGTH_SHORT).show();
                 }
             }
         });

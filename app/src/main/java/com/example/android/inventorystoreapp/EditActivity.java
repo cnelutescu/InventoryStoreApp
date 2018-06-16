@@ -24,66 +24,102 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.inventorystoreapp.data.StockContract;
 import com.squareup.picasso.Picasso;
+
 import java.io.File;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 
 /**
- * Allows user to create a product record or edit an existing one.
+ * Activity allows user to create a product record or edit an existing one.
  */
 public class EditActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    /** Identifier for the stock data loader */
-    private static final int EXISTING_STOCK_LOADER = 0;
-
     // Request permission code for read external storage
     public static final int READ_STORAGE_REQUEST_CODE = 1;
-
-    /** Request code for product image */
+    /**
+     * Request code for product image
+     */
     public static final int IMAGE_REQUEST_CODE = 2;
+    /**
+     * Angle to Rotate product image
+     */
+    public static final int IMAGE_ANGLE = 90;
+    /**
+     * Identifier for the stock data loader
+     */
+    private static final int EXISTING_STOCK_LOADER = 0;
+    /**
+     * Angle to Rotate product image
+     */
+    private static final int MAXIMUM_STOCK_QUANTITY = 9999;
+    /**
+     * Number of rotations to Rotate product image
+     */
+    private int mRotationNumber = 0;
 
     // Default Uri for product image
     private String selectedPictureUri = "NO IMAGE";
 
-    /** Content URI for the existing product (null if it's a new product) */
+    /**
+     * Content URI for the existing product (null if it's a new product)
+     */
     private Uri mCurrentStockUri;
 
-    /** EditText field to enter the product's name */
+    /**
+     * EditText field to enter the product's name
+     */
     private EditText mNameEditText;
 
-    /** EditText field to enter the product's price */
+    /**
+     * EditText field to enter the product's price
+     */
     private EditText mPriceEditText;
 
-    /** EditText field to enter the product's quantity */
+    /**
+     * EditText field to enter the product's quantity
+     */
     private EditText mQuantityEditText;
 
-    /** EditText field to enter the product's ordered quantity */
+    /**
+     * EditText field to enter the product's ordered quantity
+     */
     private EditText mOrderedQuantityEditText;
 
-    /** EditText field to enter the product's supplier name */
+    /**
+     * EditText field to enter the product's supplier name
+     */
     private EditText mSupplierNameEditText;
 
-    /** EditText field to enter the product's supplier phone */
+    /**
+     * EditText field to enter the product's supplier phone
+     */
     private EditText mSupplierPhoneEditText;
 
-    /** ImageView field to display product picture */
+    /**
+     * ImageView field to display product picture
+     */
     private ImageView imageViewProduct;
 
-    /** EditText field to enter the product's supplier email */
+    /**
+     * EditText field to enter the product's supplier email
+     */
     private EditText mSupplierEmailEditText;
 
     private ImageButton imageButtonDecreaseQuantity;
     private ImageButton imageButtonIncreaseQuantity;
     private ImageButton imageButtonDeliveredQuantity;
     private ImageButton imageButtonPhoneOrder;
+    private ImageButton imageButtonRotateImage;
 
-    /** Boolean flag that keeps track of whether the product has been edited (true) or not (false) */
+    /**
+     * Boolean flag that keeps track of whether the product has been edited (true) or not (false)
+     */
     private boolean mProductHasChanged = false;
 
     /**
@@ -127,20 +163,20 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         // Find all relevant views that we will need to read user input from
-        mNameEditText = (EditText) findViewById(R.id.product_name);
-        mPriceEditText = (EditText) findViewById(R.id.product_price);
-        mQuantityEditText = (EditText) findViewById(R.id.product_quantity);
-        mOrderedQuantityEditText = (EditText) findViewById(R.id.product_ordered);
-        mSupplierNameEditText = (EditText) findViewById(R.id.supplier_name);
-        mSupplierPhoneEditText = (EditText) findViewById(R.id.supplier_phone);
-        mSupplierEmailEditText = (EditText) findViewById(R.id.supplier_email);
-        imageViewProduct = (ImageView) findViewById(R.id.product_image);
+        mNameEditText = findViewById(R.id.product_name);
+        mPriceEditText = findViewById(R.id.product_price);
+        mQuantityEditText = findViewById(R.id.product_quantity);
+        mOrderedQuantityEditText = findViewById(R.id.product_ordered);
+        mSupplierNameEditText = findViewById(R.id.supplier_name);
+        mSupplierPhoneEditText = findViewById(R.id.supplier_phone);
+        mSupplierEmailEditText = findViewById(R.id.supplier_email);
+        imageViewProduct = findViewById(R.id.product_image);
 
-        imageButtonDecreaseQuantity = (ImageButton) findViewById(R.id.decrease_quantity);
-        imageButtonIncreaseQuantity = (ImageButton) findViewById(R.id.increase_quantity);
-        imageButtonDeliveredQuantity = (ImageButton) findViewById(R.id.delevered_quantity);
-        imageButtonPhoneOrder = (ImageButton) findViewById(R.id.phone_order);
-
+        imageButtonDecreaseQuantity = findViewById(R.id.decrease_quantity);
+        imageButtonIncreaseQuantity = findViewById(R.id.increase_quantity);
+        imageButtonDeliveredQuantity = findViewById(R.id.delivered_quantity);
+        imageButtonPhoneOrder = findViewById(R.id.phone_order);
+        imageButtonRotateImage = findViewById(R.id.rotate_photo);
 
         // Setup OnTouchListeners on all the input fields, so we can determine if the user
         // has touched or modified them. This will let us know if there are unsaved changes
@@ -152,12 +188,13 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mSupplierNameEditText.setOnTouchListener(mTouchListener);
         mSupplierPhoneEditText.setOnTouchListener(mTouchListener);
         mSupplierEmailEditText.setOnTouchListener(mTouchListener);
+        imageButtonDecreaseQuantity.setOnTouchListener(mTouchListener);
+        imageButtonIncreaseQuantity.setOnTouchListener(mTouchListener);
+        imageButtonRotateImage.setOnTouchListener(mTouchListener);
         imageButtonDeliveredQuantity.setOnTouchListener(mTouchListener);
 
-        /**
-         * OnTouchListener that listens for user touches on ImageView, implying that they are modifying
-         * the product image, and we change the mProductHasChanged boolean to true.
-         */
+         //OnTouchListener that listens for user touches on ImageView, implying that they are modifying
+         //the product image, and we change the mProductHasChanged boolean to true.
         imageViewProduct.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -173,6 +210,21 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 updateProductImage(view);
             }
         });
+
+        // Lister to Rotate product image button when user clicks it
+        imageButtonRotateImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mRotationNumber >= 3) {
+                    mRotationNumber = 0;
+                } else {
+                    mRotationNumber++;
+                }
+                int angle = mRotationNumber * IMAGE_ANGLE;
+                imageViewProduct.setRotation(angle);
+            }
+        });
+
 
         // Listener to Update product quantity when user clicks decrease_quantity button
         imageButtonDecreaseQuantity.setOnClickListener(new View.OnClickListener() {
@@ -225,15 +277,18 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         if (newQuantity <= 0) {
             newQuantity = 0;
             // Product not in stock!
-            Toast.makeText(this, "Stock is empty. Need to order!", Toast.LENGTH_LONG).show();
-        } else if (newQuantity > 9999 && i == 0) {
-            newQuantity = 9999;
-            Toast.makeText(this, "Maximum stock quantity for one product is 9999!", Toast.LENGTH_LONG).show();
-        } else if (newQuantity > 9999 && i == 1) {
+            Toast.makeText(this, R.string.stock_is_empty, Toast.LENGTH_LONG).show();
+        } else if (newQuantity > MAXIMUM_STOCK_QUANTITY && i == 0) {
+            newQuantity = MAXIMUM_STOCK_QUANTITY;
+            Toast.makeText(this, R.string.maximum_stock_quantity, Toast.LENGTH_LONG).show();
+        } else if (newQuantity > MAXIMUM_STOCK_QUANTITY && i == 1) {
             newQuantity = quantity;
-            Toast.makeText(this, "Ordered quantity too big. Maximum stock quantity exceed 9999 after deliver!", Toast.LENGTH_LONG).show();
-        } else if (newQuantity <= 9999 && i == 1) {
+            Toast.makeText(this, R.string.ordered_quantity_too_big, Toast.LENGTH_LONG).show();
+        } else if (Integer.parseInt(orderedQuantityString) == 0 && i == 1) {
+            Toast.makeText(this, R.string.you_need_to_order, Toast.LENGTH_LONG).show();
+        } else if (newQuantity <= MAXIMUM_STOCK_QUANTITY && i == 1) {
             mOrderedQuantityEditText.setText("0");
+            Toast.makeText(this, R.string.product_delivered, Toast.LENGTH_LONG).show();
         }
         mQuantityEditText.setText(Integer.toString(newQuantity));
     }
@@ -266,8 +321,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             // User granted read permission
             selectProductImage();
         } else {
-            // Inform user app needs grant read permission
-            Toast.makeText(this, "App needs permission to read images on your device.", Toast.LENGTH_LONG).show();
+            // Inform user that app needs grant read permission
+            Toast.makeText(this, R.string.app_needs_permission_to_read, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -291,15 +346,16 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null) {
+                // get Uri for the selected product picture
+                Uri mProductPictureUri = data.getData();
+                selectedPictureUri = mProductPictureUri.toString();
+                // Picasso allows for hassle-free image loading in your application — in one line of code!
+                Picasso.get().load(mProductPictureUri)
+                        .placeholder(R.drawable.image_placeholder)
+                        .fit()
+                        .into(imageViewProduct);
+                mRotationNumber = 0;    // initial rotation = 0
             }
-            // get Uri for the selected product picture
-            Uri mProductPictureUri = data.getData();
-            selectedPictureUri = mProductPictureUri.toString();
-            // Picasso allows for hassle-free image loading in your application — in one line of code!
-            Picasso.get().load(mProductPictureUri)
-                    .placeholder(R.drawable.image_placeholder)
-                    .fit()
-                    .into(imageViewProduct);
         }
     }
 
@@ -324,23 +380,20 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
-
         String priceString = mPriceEditText.getText().toString().trim();
-
-
         String quantityString = mQuantityEditText.getText().toString().trim();
         String orderedQuantityString = mOrderedQuantityEditText.getText().toString().trim();
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneString = mSupplierPhoneEditText.getText().toString().trim();
         String supplierEmailString = mSupplierEmailEditText.getText().toString().trim();
 
-         // Check if this is supposed to be a new product in stock
+        // Check if this is supposed to be a new product in stock
         // and check if all the fields in the editor are blank
-        if ( mCurrentStockUri == null &&
+        if (mCurrentStockUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
                 TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(orderedQuantityString) &&
                 TextUtils.isEmpty(supplierNameString) && TextUtils.isEmpty(supplierPhoneString) &&
-                TextUtils.isEmpty(supplierEmailString) ) {
+                TextUtils.isEmpty(supplierEmailString)) {
             // Since no fields were modified, we can return early without creating a new product.
             // No need to create ContentValues and no need to do any ContentProvider operations.
             return true;
@@ -349,33 +402,33 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         // If the product fields are empty string or null, then add a Toast that prompts the user
         // to input the correct information before they can continue
         if (TextUtils.isEmpty(nameString)) {
-            Toast.makeText(this, "Product name field is empty. Please input a value.",
+            Toast.makeText(this, R.string.product_name_field_is_empty,
                     Toast.LENGTH_LONG).show();
             return false;
         }
         if (TextUtils.isEmpty(priceString)) {
-            Toast.makeText(this, "Product price field is empty. Please input a value.",
+            Toast.makeText(this, R.string.product_price_field_is_empty,
                     Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (TextUtils.isEmpty(quantityString)) {
-            Toast.makeText(this, "Product stock quantity field is empty. Please input a value.",
+            Toast.makeText(this, R.string.product_stock_quantity_field_is_empty,
                     Toast.LENGTH_LONG).show();
             return false;
         }
         if (TextUtils.isEmpty(supplierNameString)) {
-            Toast.makeText(this, "Supplier name field is empty. Please input a value.",
+            Toast.makeText(this, R.string.supplier_name_field_is_empty,
                     Toast.LENGTH_LONG).show();
             return false;
         }
         if (TextUtils.isEmpty(supplierPhoneString)) {
-            Toast.makeText(this, "Supplier phone field is empty. Please input a value.",
+            Toast.makeText(this, R.string.supplier_phone_field_is_empty,
                     Toast.LENGTH_LONG).show();
             return false;
         }
         if (TextUtils.isEmpty(supplierEmailString)) {
-            Toast.makeText(this, "Supplier email field is empty. Please input a value.",
+            Toast.makeText(this, R.string.supplier_email_field_is_empty,
                     Toast.LENGTH_LONG).show();
             return false;
         }
@@ -383,8 +436,8 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         if (TextUtils.isEmpty(orderedQuantityString)) {
             orderedQuantityString = "0";
             mOrderedQuantityEditText.setText(orderedQuantityString);
-        } else if (mQuantity > 9999) {
-            Toast.makeText(this, "Ordered quantity too big. Maximum stock quantity can exceed 9999 after deliver!", Toast.LENGTH_LONG).show();
+        } else if (mQuantity > MAXIMUM_STOCK_QUANTITY) {
+            Toast.makeText(this, R.string.ordered_quantity_too_big, Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -393,37 +446,16 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         ContentValues values = new ContentValues();
         values.put(StockContract.StockEntry.COLUMN_STOCK_NAME, nameString);
 
-//---------------------------------------------------------------------------------------------
-//        int i = priceString.indexOf('.');
-//        if (i>=0) {
-//        }
-
-        //String newPriceString = priceString.replace(".", "");
-        //long intPrice = Integer.parseInt(newPriceString);
-        //intPrice = intPrice * 100;
-        //values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, newPriceString);
-
-        //long lngPrice = Integer.parseInt(priceString);
-
         double dblPrice = Double.parseDouble(priceString);
-        // dblPrice = dblPrice*100;
-        //long lngPrice = (long)dblPrice;
-        // long lngPrice = Long.parseLong(priceString);
-
-        //BigDecimal bd = new BigDecimal(priceString);
-        //int packedInt = bd.scaleByPowerOfTen(2).intValue();
-
-
-        //values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, priceString);
-        // values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, lngPrice);
         values.put(StockContract.StockEntry.COLUMN_STOCK_PRICE, dblPrice);
-//-------------------------------------------------------------------------------------------------
+
         values.put(StockContract.StockEntry.COLUMN_STOCK_QUANTITY, quantityString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_ORDERED, orderedQuantityString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_NAME, supplierNameString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_PHONE, supplierPhoneString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL, supplierEmailString);
         values.put(StockContract.StockEntry.COLUMN_STOCK_IMAGE, selectedPictureUri);
+        values.put(StockContract.StockEntry.COLUMN_STOCK_ROTATION_NUMBER, mRotationNumber);
 
         // Determine if this is a new or existing stock product by checking if mCurrentStockUri is null or not
         if (mCurrentStockUri == null) {
@@ -459,7 +491,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         return true;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -540,8 +571,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
-    //------- delete
-
     // will create a dialog that calls deleteProduct when the delete button is pressed.
     private void showDeleteConfirmationDialog() {
         // Create an AlertDialog.Builder and set the message, and click listeners
@@ -594,7 +623,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         finish();
     }
 
-//------------------
     /**
      * Show a dialog that warns the user there are unsaved changes that will be lost
      * if they continue leaving the editor.
@@ -623,8 +651,6 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         alertDialog.show();
     }
 
-
-    //-------------------
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         // Since the editor shows all product attributes, define a projection that contains
@@ -638,15 +664,16 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                 StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_NAME,
                 StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_PHONE,
                 StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL,
-                StockContract.StockEntry.COLUMN_STOCK_IMAGE};
+                StockContract.StockEntry.COLUMN_STOCK_IMAGE,
+                StockContract.StockEntry.COLUMN_STOCK_ROTATION_NUMBER};
         // make a new CursorLoader, passing in the uri and the projection and return it to caller
         // This loader will execute the ContentProvider's query method on a background thread
-        return new CursorLoader(this,   // Parent activity context
-                mCurrentStockUri,                // Query the content URI for the current product
-                projection,                    // Columns to include in the resulting Cursor
+        return new CursorLoader(this,    // Parent activity context
+                mCurrentStockUri,               // Query the content URI for the current product
+                projection,                     // Columns to include in the resulting Cursor
                 null,                  // No selection clause
                 null,               // No selection arguments
-                null);                // Default sort order
+                null);                 // Default sort order
     }
 
     // When the data from the product is loaded into a cursor, onLoadFinished() is called.
@@ -668,53 +695,25 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
             int phoneColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_PHONE);
             int emailColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_SUPPLIER_EMAIL);
             int imageColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_IMAGE);
+            int rotationColumnIndex = cursor.getColumnIndex(StockContract.StockEntry.COLUMN_STOCK_ROTATION_NUMBER);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
-
             int quantity = cursor.getInt(quantityColumnIndex);
             int ordered = cursor.getInt(orderedColumnIndex);
             String supplier = cursor.getString(supplierColumnIndex);
             String phone = cursor.getString(phoneColumnIndex);
             String email = cursor.getString(emailColumnIndex);
             selectedPictureUri = cursor.getString(imageColumnIndex);
-
+            mRotationNumber = cursor.getInt(rotationColumnIndex);
             // Update the views on the screen with the values from the database
             mNameEditText.setText(name);
-//------------------------------------------------------------------------------------------
-            // double price = cursor.getDouble(priceColumnIndex);
-            // int price = cursor.getInt(priceColumnIndex);
 
-            //String strPrice = cursor.getString(priceColumnIndex);
-            //String strPrice = Integer.toString(price);
-            //long lngPrice = cursor.getInt(priceColumnIndex);
-            //long lngPrice = Long.parseLong(strPrice);
-            //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
             double dblPrice = cursor.getDouble(priceColumnIndex);
-            String strPrice = String.valueOf(dblPrice);
-
-
-            //BigDecimal bd = new BigDecimal(strPrice);
-            //int packedInt = bd.scaleByPowerOfTen(2).intValue();
-
-
-            //strPrice = new StringBuilder(strPrice).insert(strPrice.length()-2, ".").toString();
-
-/*
-            mPriceEditText.setText(Double.toString(price));
-            Double db = (Double.valueOf(price));
-
-            //NumberFormat numberFormat = NumberFormat.getCurrencyInstance();
-            //String stockPrice  = numberFormat.format(price);
-            NumberFormat numberFormat = NumberFormat.getNumberInstance();
-            //String stockPrice  = String.valueOf(price);
-            String stockPrice  = numberFormat.format(price);
-            mPriceEditText.setText(stockPrice);
-*/
-            //mPriceEditText.setText(Integer.toString(price));
+            DecimalFormat df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+            df.setMaximumFractionDigits(340);        // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
+            String strPrice = df.format(dblPrice);
             mPriceEditText.setText(strPrice);
-            //mPriceEditText.setText(Long.toString(lngPrice));
-//---------------------------------------------------------------------------------------------
 
             mQuantityEditText.setText(Integer.toString(quantity));
             mOrderedQuantityEditText.setText(Integer.toString(ordered));
@@ -727,6 +726,9 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
                     .placeholder(R.drawable.image_placeholder)
                     .fit()
                     .into(imageViewProduct);
+
+            int angle = mRotationNumber * IMAGE_ANGLE;
+            imageViewProduct.setRotation(angle);
         }
     }
 
@@ -741,6 +743,5 @@ public class EditActivity extends AppCompatActivity implements LoaderManager.Loa
         mSupplierPhoneEditText.setText("");
         mSupplierEmailEditText.setText("");
     }
-
 
 }

@@ -1,19 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Layout for a single list item in the list of inventory products -->
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Layout for a single list item in the list of inventory products -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#03A9F4"
+    android:background="@color/listItemBackgroundColor"
     android:orientation="horizontal"
-    android:padding="1dp">
+    android:padding="@dimen/list_margin">
 
     <ImageView
         android:id="@+id/product_image"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="@dimen/list_image_height"
         android:layout_gravity="center_vertical"
         android:layout_weight="1.5"
-        android:contentDescription="description"
+        android:contentDescription="@string/product_image"
         android:scaleType="fitCenter"
         android:src="@drawable/image_placeholder" />
 
@@ -21,12 +23,12 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
+        android:layout_marginEnd="@dimen/list_margin"
+        android:layout_marginRight="@dimen/list_margin"
         android:layout_weight="2.5"
-        android:background="#FFFFFF"
+        android:background="@android:color/white"
         android:orientation="vertical"
-        android:padding="1dp">
+        android:padding="@dimen/list_margin">
 
         <TextView
             android:id="@+id/name"
@@ -35,33 +37,35 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="2"
-            android:padding="4dp"
-            android:textColor="#2B3D4D"
-            android:textSize="14sp"
+            android:padding="@dimen/list_text_padding"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/list_text_size"
             android:textStyle="bold"
-            tools:text="This is tne name of the product dfsd aegaeg" />
+            tools:text="This is tne name of the product in the inventory" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="4dp">
+            android:padding="@dimen/list_text_padding">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Price: "
+                android:text="@string/price"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD" />
+                android:textColor="@color/textColorLight" />
 
             <TextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:layout_marginLeft="@dimen/list_margin"
+                android:layout_marginStart="@dimen/list_margin"
+                android:text=""
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD" />
+                android:textColor="@color/textColorLight" />
 
         </LinearLayout>
 
@@ -70,59 +74,60 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="4dp">
+            android:padding="@dimen/list_text_padding">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ordered quantity: "
+                android:text="@string/ordered_quantity"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD" />
+                android:textColor="@color/textColorLight" />
 
             <TextView
                 android:id="@+id/ordered"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
+                android:layout_marginLeft="@dimen/list_margin"
+                android:layout_marginStart="@dimen/list_margin"
+                android:text=""
                 android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="#AEB6BD" />
+                android:textColor="@color/textColorLight" />
 
         </LinearLayout>
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="#FFFFFF"
+        android:background="@android:color/white"
         android:orientation="vertical"
-        android:padding="2dp">
+        android:padding="@dimen/list_margin">
 
         <TextView
             android:id="@+id/quantity"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/list_half_height"
+            android:layout_height="@dimen/list_half_height"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/quantity_circle"
             android:gravity="center"
-            android:padding="2dp"
+            android:padding="@dimen/list_margin"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
+            android:textSize="@dimen/list_text_size"
             tools:text="23" />
 
         <ImageView
             android:id="@+id/sale"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/list_half_height"
+            android:layout_height="@dimen/list_half_height"
             android:layout_gravity="center_horizontal"
-            android:contentDescription="sale_image"
+            android:contentDescription="@string/sale_image"
             android:gravity="center"
-            android:padding="2dp"
+            android:padding="@dimen/list_text_padding"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_shopping_cart" />
+            android:src="@drawable/ic_add_shopping_cart_blue_minus" />
 
     </LinearLayout>
 

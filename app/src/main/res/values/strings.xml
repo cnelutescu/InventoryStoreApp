@@ -24,14 +24,12 @@
     <!-- Toast message in editor when current product has failed to be updated [CHAR LIMIT=NONE] -->
     <string name="edit_update_product_failed">Error with updating product</string>
 
-
     <!-- Dialog message when user is leaving editor but hasn't saved changes [CHAR LIMIT=NONE] -->
     <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
     <!-- Dialog button text for the option to discard a user's changes [CHAR LIMIT=20] -->
     <string name="discard">Discard</string>
     <!-- Dialog button text for the option to keep editing the current product [CHAR LIMIT=20] -->
     <string name="keep_editing">Keep Editing</string>
-
 
     <!-- Toast message in editor when current product was successfully deleted [CHAR LIMIT=NONE] -->
     <string name="edit_delete_product_successful">Product deleted</string>
@@ -46,12 +44,76 @@
     <!-- Dialog button text for the option to cancel deletion of the current product [CHAR LIMIT=20] -->
     <string name="cancel">Cancel</string>
 
-
-    <string name="search">Search Country</string>
     <string name="search_hint">Search products</string>
     <string name="search_settings">Search Products Names</string>
+    <string name="empty_stock_image">Empty stock image</string>
+    <string name="no_products_in_stock">No products in stock! Please add products in inventory stock.</string>
+    <string name="add_products_in_inventory_stock">Add products in inventory stock</string>
+    <string name="product_name">Product name</string>
+    <string name="name">Name</string>
+    <string name="product_image">product image</string>
+    <string name="rotate_photo">rotate photo</string>
+    <string name="product_price">Product price</string>
+    <string name="price">Price: </string>
+    <string name="price_hint">Price</string>
+    <string name="product_stock_quantity">Product stock quantity</string>
+    <string name="decrease_quantity">decrease quantity</string>
+    <string name="quantity">Quantity</string>
+    <string name="increase_quantity">increase quantity</string>
+    <string name="product_ordered_quantity">Product ordered quantity</string>
+    <string name="ordered_quantity">Ordered quantity: </string>
+    <string name="ordered_quantity_hint">Ordered quantity</string>
+    <string name="delivered">Delivered</string>
+    <string name="delivered_quantity">delivered quantity</string>
+    <string name="supplier_name">Supplier name</string>
+    <string name="supplier">Supplier</string>
+    <string name="supplier_phone">Supplier phone</string>
+    <string name="phone">Phone</string>
+    <string name="order">Order</string>
+    <string name="phone_order">phone order</string>
+    <string name="supplier_email">Supplier email</string>
+    <string name="email">Email</string>
+    <string name="sale_image">sale_image</string>
+    <string name="filter_the_list_of_inventory_products">Filter the list of inventory products</string>
+    <string name="decrease_product_in_stock_by_one_item">Decrease product in stock by one item</string>
+    <string name="delete_product_from_inventory_stock">Delete product from inventory stock</string>
+    <string name="save_product_in_inventory_stock">Save product in inventory stock</string>
+    <string name="stock_table_deleted">Stock table deleted - all data erased, </string>
+    <string name="rows_deleted"> rows deleted from stock database</string>
+    <string name="stock_is_empty">Stock is empty. Need to order!</string>
+    <string name="maximum_stock_quantity">Maximum stock quantity for one product is 9999!</string>
+    <string name="ordered_quantity_too_big">Ordered quantity too big. Maximum stock quantity exceed 9999 after deliver!</string>
+    <string name="you_need_to_order">You need to order first! Ordered quantity is 0.</string>
+    <string name="app_needs_permission_to_read">App needs permission to read images on your device.</string>
+    <string name="product_name_field_is_empty">Product name field is empty. Please input a value.</string>
+    <string name="product_price_field_is_empty">Product price field is empty. Please input a value.</string>
+    <string name="product_stock_quantity_field_is_empty">Product stock quantity field is empty. Please input a value.</string>
+    <string name="supplier_name_field_is_empty">Supplier name field is empty. Please input a value.</string>
+    <string name="supplier_phone_field_is_empty">Supplier phone field is empty. Please input a value.</string>
+    <string name="supplier_email_field_is_empty">Supplier email field is empty. Please input a value.</string>
+    <string name="product_not_in_stock">Product not in stock. Need to order!</string>
+    <string name="cannot_query_unknown_URI">Cannot query unknown URI</string>
 
-
-
+    <string name="insertion_is_not_supported_for_uri">Insertion is not supported for uri: </string>
+    <string name="product_requires_a_name">Product requires a name</string>
+    <string name="product_requires_valid_price">Product requires valid price</string>
+    <string name="product_requires_valid_quantity">Product requires valid quantity</string>
+    <string name="product_requires_valid_ordered_quantity">Product requires valid ordered quantity</string>
+    <string name="product_requires_a_supplier_name">Product requires a supplier name</string>
+    <string name="product_requires_a_supplier_phone">Product requires a supplier phone</string>
+    <string name="product_requires_valid_rotation_number">Product requires valid rotation number</string>
+    <string name="failed_to_insert_row_for_uri">Failed to insert row for uri:</string>
+    <string name="update_is_not_supported_for_uri">Update is not supported for uri:</string>
+    <string name="deletion_is_not_supported_for_uri">Deletion is not supported for uri:</string>
+    <string name="unknown_URI">Unknown URI</string>
+    <string name="with_match">with match</string>
+    <string name="stock_product_reduced_by_one">Stock product reduced by one.</string>
+    <string name="product_delivered">Product delivered. Stock quantity increased with delivered quantity.</string>
+    <string name="insert_demo_data">Insert demo data</string>
+    <string name="delete_all_data">Delete all data</string>
+    <string name="help">Help</string>
+    <string name="filter_products">Filter products</string>
+    <string name="add_product">Add product</string>
+    <string name="save">Save</string>
 
 </resources>
